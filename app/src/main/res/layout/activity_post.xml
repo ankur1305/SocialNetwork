@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PostActivity">
+
+    <include
+        android:id="@+id/update_post_page_toolbar"
+        layout="@layout/app_bar_layout"/>
+
+    <ImageButton
+        android:id="@+id/select_post_image"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_below="@id/update_post_page_toolbar"
+        android:layout_alignParentTop="false"
+        android:layout_alignParentBottom="false"
+        android:layout_centerInParent="true"
+        android:layout_marginTop="50dp"
+        android:background="@color/colorAccent"
+        android:elevation="5dp"
+        android:padding="50dp"
+        android:scaleType="centerInside"
+        app:srcCompat="@drawable/select_image" />
+
+    <EditText
+        android:id="@+id/post_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/select_post_image"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="10dp"
+        android:background="@drawable/inputs"
+        android:drawableLeft="@drawable/edit"
+        android:elevation="5dp"
+        android:ems="10"
+        android:gravity="center_horizontal"
+        android:hint="Add Caption"
+        android:inputType="textMultiLine"
+        android:padding="15dp"
+        android:textAlignment="center" />
+
+    <Button
+        android:id="@+id/update_post_button"
+        android:layout_width="150dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/post_description"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:background="@drawable/button"
+        android:elevation="3dp"
+        android:text="Post"
+        android:textColor="@android:color/background_light"
+        android:textSize="18sp"
+        android:textStyle="bold" />
+
+</RelativeLayout>
