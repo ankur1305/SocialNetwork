@@ -287,6 +287,11 @@ public class MainActivity extends AppCompatActivity {
         startActivity(loginIntent);
     }
 
+    private void SendUserToSettinsActivity() {
+        Intent settingsActivityIntent = new Intent(getApplicationContext(), SettingsActivity.class);
+        startActivity(settingsActivityIntent);
+    }
+
     private void SendUserToClickPostActivity(String PostKey) {
         Intent clickPostActivityIntent = new Intent(getApplicationContext(), ClickPostActivity.class);
         clickPostActivityIntent.putExtra("PostKey", PostKey);
@@ -338,7 +343,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Messages", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_settings:
-                Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show();
+                SendUserToSettinsActivity();
                 break;
             case R.id.nav_logout:
                 mAuth.signOut();
