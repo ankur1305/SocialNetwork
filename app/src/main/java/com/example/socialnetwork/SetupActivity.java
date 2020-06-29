@@ -221,15 +221,15 @@ public class SetupActivity extends AppCompatActivity {
             userMap.put("username", username);
             userMap.put("fullname", fullname);
             if(phone == null){
-                userMap.put("phone", "null");
+                userMap.put("phone", "");
             }
             else{
                 userMap.put("phone", phone);
             }
             userMap.put("status", "Hey There, I Am Using Social Network.");
-            userMap.put("gender", "null");
-            userMap.put("dob", "null");
-            userMap.put("relationshipstatus", "null");
+            userMap.put("gender", "");
+            userMap.put("dob", "");
+            userMap.put("relationshipstatus", "");
             UsersRef.updateChildren(userMap).addOnCompleteListener(new OnCompleteListener() {
                 @Override
                 public void onComplete(@NonNull Task task) {
