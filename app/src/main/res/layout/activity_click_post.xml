@@ -11,10 +11,9 @@
         android:layout_width="match_parent"
         android:layout_height="300dp"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
-        android:scaleType="centerInside"
         app:srcCompat="@drawable/select_image" />
 
     <TextView
@@ -23,7 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/click_post_image"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="15dp"
         android:background="@drawable/inputs"
         android:elevation="10dp"
         android:padding="30dp"
@@ -54,7 +53,7 @@
         android:layout_below="@id/edit_post_button"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="30dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="20dp"
         android:layout_marginEnd="30dp"
         android:layout_marginBottom="30dp"
         android:background="@drawable/button"
