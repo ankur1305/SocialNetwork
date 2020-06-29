@@ -10,7 +10,6 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
 import android.content.Intent;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -28,8 +27,6 @@ import android.widget.Toast;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -38,13 +35,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
-
-import org.w3c.dom.Text;
-
-import java.io.File;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -179,6 +170,9 @@ public class MainActivity extends AppCompatActivity {
         FirebaseRecyclerAdapter<Posts, PostsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Posts, PostsViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull PostsViewHolder holder, int position, @NonNull Posts model) {
+
+                final String PostKey = getRef(position).getKey();
+
                 holder.setFullName(model.getFullname());
                 holder.setTime(model.getTime());
                 holder.setDate(model.getDate());
@@ -186,6 +180,12 @@ public class MainActivity extends AppCompatActivity {
                 holder.setPostimage(getApplicationContext(), model.getPostimage());
                 holder.setProfileimage(getApplication(), model.getProfileimage());
 
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        SendUserToClickPostActivity(PostKey);
+                    }
+                });
             }
 
             @NonNull
@@ -199,6 +199,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseRecyclerAdapter.startListening();
         postList.setAdapter(firebaseRecyclerAdapter);
     }
+
 
     public static class PostsViewHolder extends RecyclerView.ViewHolder{
 
@@ -226,19 +227,15 @@ public class MainActivity extends AppCompatActivity {
             PostDate.setText("  " + date);
         }
         public void setDescription(String description){
-            TextView PostDescription = (TextView) mView.findViewById(R.id.post_description);
+            TextView PostDescription = (TextView) mView.findViewById(R.id.click_post_description);
             PostDescription.setText(description);
         }
         public void setPostimage(Context ctx, String postimage){
-            ImageView PostImage = (ImageView) mView.findViewById(R.id.post_image);
+            ImageView PostImage = (ImageView) mView.findViewById(R.id.click_post_image);
             PicassoStuff(ctx,postimage,PostImage);
         }
     }
 
-    private void SendUserToPostActivity() {
-        Intent postActivityIntent = new Intent(getApplicationContext(), PostActivity.class);
-        startActivity(postActivityIntent);
-    }
 
     @Override
     protected void onStart() {
@@ -276,10 +273,21 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
+    private void SendUserToPostActivity() {
+        Intent postActivityIntent = new Intent(getApplicationContext(), PostActivity.class);
+        startActivity(postActivityIntent);
+    }
+
     private void SendUserToLoginActivity() {
         Intent loginIntent = new Intent(MainActivity.this, LoginActivity.class);
         loginIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(loginIntent);
+    }
+
+    private void SendUserToClickPostActivity(String PostKey) {
+        Intent clickPostActivityIntent = new Intent(getApplicationContext(), ClickPostActivity.class);
+        clickPostActivityIntent.putExtra("PostKey", PostKey);
+        startActivity(clickPostActivityIntent);
     }
 
     private static void PicassoStuff(Context context, String loadImage, ImageView intoImage){

@@ -32,6 +32,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -60,7 +62,7 @@ public class PostActivity extends AppCompatActivity {
         mToolbar = (Toolbar) findViewById(R.id.update_post_page_toolbar);
         SelectPostImage = (ImageButton) findViewById(R.id.select_post_image);
         UpdatePostButton = (Button) findViewById(R.id.update_post_button);
-        PostDescription = (EditText) findViewById(R.id.post_description);
+        PostDescription = (EditText) findViewById(R.id.click_post_description);
         loadingBar = new ProgressDialog(this);
 
         mAuth = FirebaseAuth.getInstance();
