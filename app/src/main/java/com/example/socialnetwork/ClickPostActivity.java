@@ -3,7 +3,10 @@ package com.example.socialnetwork;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -52,16 +56,18 @@ public class ClickPostActivity extends AppCompatActivity {
         clickPostRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                description = snapshot.child("description").getValue().toString();
-                image = snapshot.child("postimage").getValue().toString();
-                databaseUserID = snapshot.child("uid").getValue().toString();
+                if(snapshot.exists()){
+                    description = snapshot.child("description").getValue().toString();
+                    image = snapshot.child("postimage").getValue().toString();
+                    databaseUserID = snapshot.child("uid").getValue().toString();
 
-                ClickPostDescription.setText(description);
-                PicassoStuff(getApplicationContext(),image,ClickPostImage);
+                    ClickPostDescription.setText(description);
+                    PicassoStuff(getApplicationContext(),image,ClickPostImage);
 
-                if(currentUserID.equals(databaseUserID)){
-                    DeletePostButton.setVisibility(View.VISIBLE);
-                    EditPostButton.setVisibility(View.VISIBLE);
+                    if(currentUserID.equals(databaseUserID)){
+                        DeletePostButton.setVisibility(View.VISIBLE);
+                        EditPostButton.setVisibility(View.VISIBLE);
+                    }
                 }
 
             }
@@ -71,6 +77,50 @@ public class ClickPostActivity extends AppCompatActivity {
 
             }
         });
+
+        DeletePostButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DeleteCurrentPost();
+            }
+        });
+    }
+
+    private void DeleteCurrentPost() {
+        AlertDialogStuff();
+    }
+
+    private void AlertDialogStuff() {
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(ClickPostActivity.this, R.style.AlertDialogTheme);
+        alertDialogBuilder
+                .setTitle("Delete This Post")
+                .setMessage("Are You Sure To Delete This Post ?")
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        clickPostRef.removeValue();
+                        SendUserToMainActivity();
+                        Toast.makeText(ClickPostActivity.this, "Post Has Been Deleted Successfully!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
+        alertDialogBuilder.create();
+
+
+    }
+
+    private void SendUserToMainActivity() {
+        Intent mainActivityIntent = new Intent(getApplicationContext(), MainActivity.class);
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(mainActivityIntent);
+        finish();
     }
 
     private static void PicassoStuff(Context context, String loadImage, ImageView intoImage){

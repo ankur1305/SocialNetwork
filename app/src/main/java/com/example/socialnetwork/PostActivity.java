@@ -6,6 +6,9 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -33,7 +36,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -225,9 +229,40 @@ public class PostActivity extends AppCompatActivity {
 
         if(requestCode == Gallery_Pick && resultCode == RESULT_OK && data != null){
             ImageUri = data.getData();
-            SelectPostImage.setImageURI(ImageUri);
+            InputStream imageStream = null;
+            try {
+                imageStream = getContentResolver().openInputStream(ImageUri);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+            Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
+            selectedImage = getResizedBitmap(selectedImage, 400,300);// 400 and 300 height and width, replace with desired size
+
+            SelectPostImage.setImageBitmap(selectedImage); // your desired image
+
+
+//            SelectPostImage.setImageURI(ImageUri);
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
+
+        // create a matrix for the manipulation
+        Matrix matrix = new Matrix();
+
+        // resize the bit map
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // recreate the new Bitmap
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
+        return resizedBitmap;
     }
 
 
