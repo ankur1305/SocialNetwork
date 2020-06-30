@@ -15,8 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".FindFriendsActivity"
-            android:parentActivityName=".MainActivity"></activity>
+        <activity android:name=".CommentsActivity"></activity>
+        <activity
+            android:name=".FindFriendsActivity"
+            android:parentActivityName=".MainActivity" />
         <activity android:name=".ProfileActivity" />
         <activity
             android:name=".SettingsActivity"
