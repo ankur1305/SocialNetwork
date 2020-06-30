@@ -126,16 +126,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:baselineAlignBottom="false"
+                android:layout_marginLeft="130dp"
                 android:src="@drawable/comment"/>
-            <TextView
-                android:id="@+id/display_no_of_comments"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="15dp"
-                android:text="0 Comments"
-                android:textColor="@android:color/black"
-                android:textSize="14sp"
-                android:textStyle="bold"/>
+
 
         </LinearLayout>
 

@@ -115,7 +115,7 @@ public class PostActivity extends AppCompatActivity {
         saveCurrentDate = currentDate.format(calForDate.getTime());
 
         Calendar calForTime = Calendar.getInstance();
-        SimpleDateFormat currentTime = new SimpleDateFormat("HH:mm");
+        SimpleDateFormat currentTime = new SimpleDateFormat("h:mm a");
         saveCurrentTime = currentTime.format(calForDate.getTime());
 
         postRandomName = saveCurrentDate + saveCurrentTime;
@@ -160,19 +160,6 @@ public class PostActivity extends AppCompatActivity {
             }
         });
 
-//        filePath.putFile(ImageUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-//            @Override
-//            public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-//                if(task.isSuccessful()){
-//                    downloadUrl = task.getResult().getMetadata().getReference().getDownloadUrl().toString();
-////                    Toast.makeText(PostActivity.this, "Added Post Successfuly", Toast.LENGTH_SHORT).show();
-//                    SavingPostInformationToDatabase();
-//                }else{
-//                    String message = task.getException().getMessage();
-//                    Toast.makeText(PostActivity.this, "Error: "+message, Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
     }
 
     private void SavingPostInformationToDatabase() {

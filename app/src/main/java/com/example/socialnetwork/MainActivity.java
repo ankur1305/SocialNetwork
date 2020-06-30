@@ -54,7 +54,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton AddNewPostButton;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference UsersRef, PostsRef, LikesRef;
+    private DatabaseReference UsersRef, PostsRef, LikesRef, CommentsRef;
     private StorageReference ImagesRef;
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
         LikesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
+        CommentsRef = FirebaseDatabase.getInstance().getReference().child("Comments");
 
 
             builder = new Picasso.Builder(this);
@@ -186,14 +187,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
 
-                holder.CommentPostButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Intent commentsActivityIntent = new Intent(getApplicationContext(), CommentsActivity.class);
-                        commentsActivityIntent.putExtra("PostKey", PostKey);
-                        startActivity(commentsActivityIntent);
-                    }
-                });
 
                 holder.LikePostButton.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -223,6 +216,14 @@ public class MainActivity extends AppCompatActivity {
                         });
                     }
                 });
+                holder.CommentPostButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Intent commentActivityIntent = new Intent(getApplicationContext(), CommentsActivity.class);
+                        commentActivityIntent.putExtra("PostKey", PostKey);
+                        startActivity(commentActivityIntent);
+                    }
+                });
             }
 
             @NonNull
@@ -243,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
         View mView;
 
         ImageButton LikePostButton, CommentPostButton;
-        TextView DisplayNoOfLikes, DisplayNoOfComments;
+        TextView DisplayNoOfLikes;
         int countLikes, countComments;
         String currentUserId;
         DatabaseReference LikesRef;
@@ -255,7 +256,6 @@ public class MainActivity extends AppCompatActivity {
             LikePostButton = mView.findViewById(R.id.like_button);
             CommentPostButton = mView.findViewById(R.id.comment_button);
             DisplayNoOfLikes = mView.findViewById(R.id.display_no_of_likes);
-            DisplayNoOfComments = mView.findViewById(R.id.display_no_of_comments);
 
             LikesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
             currentUserId = FirebaseAuth.getInstance().getCurrentUser().getUid();
@@ -269,11 +269,11 @@ public class MainActivity extends AppCompatActivity {
                     if(snapshot.child(postKey).hasChild(currentUserId)){
                         countLikes = (int) snapshot.child(postKey).getChildrenCount();
                         LikePostButton.setImageResource(R.drawable.like);
-                        DisplayNoOfLikes.setText((Integer.toString(countLikes)) + " Like");
+                        DisplayNoOfLikes.setText((Integer.toString(countLikes)) + " Likes");
                     }else{
                         countLikes = (int) snapshot.child(postKey).getChildrenCount();
                         LikePostButton.setImageResource(R.drawable.dislike);
-                        DisplayNoOfLikes.setText((Integer.toString(countLikes)) + " Like");
+                        DisplayNoOfLikes.setText((Integer.toString(countLikes)) + " Likes");
                     }
                 }
 
@@ -283,6 +283,8 @@ public class MainActivity extends AppCompatActivity {
                 }
             });
         }
+
+
 
         public void setFullName(String fullname){
             TextView username = (TextView) mView.findViewById(R.id.post_user_name);
@@ -309,6 +311,8 @@ public class MainActivity extends AppCompatActivity {
             ImageView PostImage = (ImageView) mView.findViewById(R.id.click_post_image);
             PicassoStuff(ctx,postimage,PostImage);
         }
+
+
     }
 
 
