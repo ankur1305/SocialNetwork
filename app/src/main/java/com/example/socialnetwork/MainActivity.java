@@ -37,6 +37,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -299,7 +300,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static void PicassoStuff(Context context, String loadImage, ImageView intoImage){
-        Picasso.Builder builder = new Picasso.Builder(context);
+        Picasso.Builder builder = new Picasso.Builder(context).indicatorsEnabled(true);
         builder.listener(new Picasso.Listener()
         {
             @Override
@@ -328,7 +329,7 @@ public class MainActivity extends AppCompatActivity {
                 SendUserToPostActivity();
                 break;
             case R.id.nav_profile:
-                Toast.makeText(this, "Profile", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(MainActivity.this, ProfileActivity.class));
                 break;
             case R.id.nav_home:
                 Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
@@ -346,7 +347,7 @@ public class MainActivity extends AppCompatActivity {
                 SendUserToSettinsActivity();
                 break;
             case R.id.nav_logout:
-                mAuth.signOut();
+                FirebaseAuth.getInstance().signOut();
                 SendUserToLoginActivity();
                 break;
         }

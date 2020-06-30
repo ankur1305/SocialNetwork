@@ -27,11 +27,11 @@
                 android:layout_height="wrap_content"
                 android:text="Profile Name"
                 android:layout_below="@id/my_profile_pic"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="40dp"
                 android:textAlignment="center"
                 android:textAllCaps="false"
                 android:textColor="@android:color/background_light"
-                android:textSize="20sp"
+                android:textSize="24sp"
                 android:textStyle="bold"/>
             <TextView
                 android:id="@+id/my_user_name"

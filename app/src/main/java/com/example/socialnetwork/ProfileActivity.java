@@ -1,9 +1,22 @@
 package com.example.socialnetwork;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -11,6 +24,11 @@ public class ProfileActivity extends AppCompatActivity {
 
     private TextView userName, userProfName, userStatus, userPhone, userGender, userRelation, userDOB;
     private CircleImageView userProfImage;
+
+    private DatabaseReference profileUserRef;
+    private FirebaseAuth mAuth;
+
+    private String currentUserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,5 +43,55 @@ public class ProfileActivity extends AppCompatActivity {
         userGender = findViewById(R.id.my_gender);
         userRelation = findViewById(R.id.my_relationship_status);
         userDOB = findViewById(R.id.my_dob);
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUserID = mAuth.getCurrentUser().getUid();
+        profileUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
+
+        profileUserRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    String myUserName = snapshot.child("username").getValue().toString();
+                    String myProfileImage = snapshot.child("profileimage").getValue().toString();
+                    String myProfileStatus = snapshot.child("status").getValue().toString();
+                    String myProfilePhone = snapshot.child("phone").getValue().toString();
+                    String myUserProfileName = snapshot.child("fullname").getValue().toString();
+                    String myProfileGender = snapshot.child("gender").getValue().toString();
+                    String myProfileRelation = snapshot.child("relationshipstatus").getValue().toString();
+                    String myProfileDOB = snapshot.child("dob").getValue().toString();
+
+                    userName.setText("@" + myUserName);
+                    PicassoStuff(getApplicationContext(), myProfileImage, userProfImage);
+                    userStatus.setText(myProfileStatus);
+                    userPhone.setText("Phone : " + myProfilePhone);
+                    userProfName.setText(myUserProfileName);
+                    userGender.setText("Gender : " + myProfileGender);
+                    userRelation.setText("Relationship Status : " + myProfileRelation);
+                    userDOB.setText("DOB : " + myProfileDOB);
+
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
+
+    private static void PicassoStuff(Context context, String loadImage, ImageView intoImage){
+        Picasso.Builder builder = new Picasso.Builder(context).indicatorsEnabled(true);
+        builder.listener(new Picasso.Listener()
+        {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
+            {
+                String message = exception.getMessage();
+                Log.i("Error", message);
+            }
+        });
+        builder.build().load(loadImage).fit().into(intoImage);
+    }
+
 }

@@ -192,7 +192,7 @@ public class SettingsActivity extends AppCompatActivity {
                             }
                         });
                     }
-                }); 
+                });
             }else{
                 Toast.makeText(this, "An Error Occured, Try Again", Toast.LENGTH_SHORT).show();
                 loadingBar.dismiss();
@@ -250,7 +250,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private static void PicassoStuff(Context context, String loadImage, ImageView intoImage){
-        Picasso.Builder builder = new Picasso.Builder(context);
+        Picasso.Builder builder = new Picasso.Builder(context).indicatorsEnabled(true);
         builder.listener(new Picasso.Listener()
         {
             @Override

@@ -89,25 +89,6 @@ public class SetupActivity extends AppCompatActivity {
             }
         });
 
-//        UsersRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                if(dataSnapshot.exists()){
-//                    if(dataSnapshot.hasChild("profileimage")){
-//                        String image = dataSnapshot.child("profileimage").getValue().toString();
-//                        Glide.with(SetupActivity.this).load(image).circleCrop().placeholder(R.drawable.profile).into(profileImage);
-//                    }
-//                    else{
-//                        Toast.makeText(SetupActivity.this, "Please Select Profile Image...", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//            }
-//        });
     }
 
     @Override
@@ -169,34 +150,6 @@ public class SetupActivity extends AppCompatActivity {
                         });
                     }
                 });
-
-
-
-//                    filePath.putFile(resultUri).addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
-//                    @Override
-//                    public void onComplete(@NonNull Task<UploadTask.TaskSnapshot> task) {
-//                        if(task.isSuccessful()){
-//                            Toast.makeText(SetupActivity.this, "Profile Updated Successfully", Toast.LENGTH_SHORT).show();
-//                            final String downloadUrl = task.getResult().getMetadata().getReference().getDownloadUrl().toString();
-//                            UsersRef.child("profileimage").setValue(downloadUrl)
-//                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-//                                        @Override
-//                                        public void onComplete(@NonNull Task<Void> task) {
-//                                            if(task.isSuccessful()){
-////                                                Intent selfIntent = new Intent(getApplicationContext(), SetupActivity.class);
-////                                                startActivity(selfIntent);
-//                                                Toast.makeText(SetupActivity.this, "Profile Image Update Successfully", Toast.LENGTH_SHORT).show();
-//                                                loadingBar.dismiss();
-//                                            }else{
-//                                                String message = task.getException().getMessage();
-//                                                Toast.makeText(SetupActivity.this, "Something Error Occured" + message, Toast.LENGTH_SHORT).show();
-//                                                loadingBar.dismiss();
-//                                            }
-//                                        }
-//                                    });
-//                        }
-//                    }
-//                });
             }else{
                 Toast.makeText(this, "An Error Occured, Try Again", Toast.LENGTH_SHORT).show();
                 loadingBar.dismiss();

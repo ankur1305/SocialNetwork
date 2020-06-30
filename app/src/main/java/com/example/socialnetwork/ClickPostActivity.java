@@ -161,7 +161,7 @@ public class ClickPostActivity extends AppCompatActivity {
     }
 
     private static void PicassoStuff(Context context, String loadImage, ImageView intoImage){
-        Picasso.Builder builder = new Picasso.Builder(context);
+        Picasso.Builder builder = new Picasso.Builder(context).indicatorsEnabled(true);
         builder.listener(new Picasso.Listener()
         {
             @Override
