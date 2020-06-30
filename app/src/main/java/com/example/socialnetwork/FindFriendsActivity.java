@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -78,10 +79,20 @@ public class FindFriendsActivity extends AppCompatActivity {
 
         FirebaseRecyclerAdapter<FindFriends, FindFriendsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<FindFriends, FindFriendsViewHolder>(options) {
             @Override
-            protected void onBindViewHolder(@NonNull FindFriendsViewHolder holder, int position, @NonNull FindFriends model) {
+            protected void onBindViewHolder(@NonNull FindFriendsViewHolder holder, final int position, @NonNull FindFriends model) {
                 holder.setFullName(model.getFullname());
                 holder.setProfileimage(getApplication(), model.getProfileimage());
                 holder.setStatus(model.getStatus());
+
+                holder.mView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String visit_user_id = getRef(position).getKey();
+                        Intent profileIntent = new Intent(getApplicationContext(), PersonProfileActivity.class);
+                        profileIntent.putExtra("visit_user_id",visit_user_id);
+                        startActivity(profileIntent);
+                    }
+                });
             }
 
             @NonNull

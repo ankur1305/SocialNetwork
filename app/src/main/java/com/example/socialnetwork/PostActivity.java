@@ -53,6 +53,7 @@ public class PostActivity extends AppCompatActivity {
     private final static int Gallery_Pick = 1;
     private Uri ImageUri;
     private String description, saveCurrentDate, saveCurrentTime, postRandomName, downloadImageUrl, current_user_id;
+    private long countPosts = 0;
 
     private StorageReference PostImagesRef;
     private DatabaseReference usersRef, postsRef;
@@ -111,7 +112,7 @@ public class PostActivity extends AppCompatActivity {
 
     private void StoringImageToFirebaseStorage() {
         Calendar calForDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("dd-MMMM-yyyy");
+        SimpleDateFormat currentDate = new SimpleDateFormat("E, dd MMM");
         saveCurrentDate = currentDate.format(calForDate.getTime());
 
         Calendar calForTime = Calendar.getInstance();
@@ -163,6 +164,23 @@ public class PostActivity extends AppCompatActivity {
     }
 
     private void SavingPostInformationToDatabase() {
+
+        postsRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if(snapshot.exists()){
+                    countPosts = snapshot.getChildrenCount();
+                }else{
+                    countPosts = 0;
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
         usersRef.child(current_user_id).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -178,6 +196,8 @@ public class PostActivity extends AppCompatActivity {
                     postsMap.put("postimage", downloadImageUrl);
                     postsMap.put("profileimage", userProfileImage);
                     postsMap.put("fullname", userFullName);
+                    postsMap.put("counter", countPosts);
+
 
                     postsRef.child(current_user_id + postRandomName).updateChildren(postsMap).addOnCompleteListener(new OnCompleteListener() {
                         @Override

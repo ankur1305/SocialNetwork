@@ -7,6 +7,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -20,35 +21,27 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ProfileActivity extends AppCompatActivity {
+public class PersonProfileActivity extends AppCompatActivity {
 
     private TextView userName, userProfName, userStatus, userPhone, userGender, userRelation, userDOB;
     private CircleImageView userProfImage;
+    private Button SendFriendRequestButton, DeclineFriendRequestButton;
 
-    private DatabaseReference profileUserRef;
+    private DatabaseReference profileUserRef, UsersRef;
     private FirebaseAuth mAuth;
 
-    private String currentUserID;
+    private String senderUserID, receiverUserID;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_profile);
+        setContentView(R.layout.activity_person_profile);
 
-        userName = findViewById(R.id.my_username);
-        userProfImage = findViewById(R.id.my_profile_pic);
-        userStatus = findViewById(R.id.my_profile_status);
-        userPhone = findViewById(R.id.my_phone);
-        userProfName = findViewById(R.id.my_full_name);
-        userGender = findViewById(R.id.my_gender);
-        userRelation = findViewById(R.id.my_relationship_status);
-        userDOB = findViewById(R.id.my_dob);
+        receiverUserID = getIntent().getExtras().get("visit_user_id").toString();
+        InitializeFields();
 
-        mAuth = FirebaseAuth.getInstance();
-        currentUserID = mAuth.getCurrentUser().getUid();
-        profileUserRef = FirebaseDatabase.getInstance().getReference().child("Users").child(currentUserID);
-
-        profileUserRef.addValueEventListener(new ValueEventListener() {
+        UsersRef.child(receiverUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
@@ -78,6 +71,25 @@ public class ProfileActivity extends AppCompatActivity {
 
             }
         });
+
+
+    }
+
+    private void InitializeFields() {
+        userName = findViewById(R.id.person_username);
+        userProfImage = findViewById(R.id.person_profile_pic);
+        userStatus = findViewById(R.id.person_profile_status);
+        userPhone = findViewById(R.id.person_phone);
+        userProfName = findViewById(R.id.person_full_name);
+        userGender = findViewById(R.id.person_gender);
+        userRelation = findViewById(R.id.person_relationship_status);
+        userDOB = findViewById(R.id.person_dob);
+        SendFriendRequestButton = findViewById(R.id.person_send_friend_request_btn);
+        DeclineFriendRequestButton = findViewById(R.id.person_decline_friend_request_btn);
+
+        mAuth = FirebaseAuth.getInstance();
+        senderUserID = mAuth.getCurrentUser().getUid();
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
     }
 
     private static void PicassoStuff(Context context, String loadImage, ImageView intoImage){
@@ -93,5 +105,4 @@ public class ProfileActivity extends AppCompatActivity {
         });
         builder.build().load(loadImage).fit().into(intoImage);
     }
-
 }

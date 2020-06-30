@@ -15,7 +15,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".ForgotPasswordActivity"></activity>
+        <activity android:name=".PersonProfileActivity"></activity>
+        <activity
+            android:name=".ForgotPasswordActivity"
+            android:parentActivityName=".LoginActivity" />
         <activity android:name=".CommentsActivity" />
         <activity
             android:name=".FindFriendsActivity"
