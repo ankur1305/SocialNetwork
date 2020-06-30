@@ -31,12 +31,14 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 
+import org.w3c.dom.Text;
+
 public class LoginActivity extends AppCompatActivity {
 
     private Button LoginButton;
     private EditText UserEmail, UserPassword;
     private ImageView googleSignInButton;
-    private TextView NeedNewAcountLink;
+    private TextView NeedNewAcountLink, ForgotPasswordLink;
     private ProgressDialog loadingBar;
 
     private FirebaseAuth mAuth;
@@ -53,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         UserEmail = (EditText) findViewById(R.id.login_email);
         UserPassword = (EditText) findViewById(R.id.login_password);
         NeedNewAcountLink = (TextView) findViewById(R.id.register_account_link);
+        ForgotPasswordLink = (TextView) findViewById(R.id.reset_account_link);
         googleSignInButton = (ImageView) findViewById(R.id.google_signin_button);
 
         loadingBar = new ProgressDialog(this);
@@ -69,6 +72,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 AllowingUserToLogin();
+            }
+        });
+        ForgotPasswordLink.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendUserToForgotPasswordActivity();
             }
         });
 
@@ -185,6 +194,10 @@ public class LoginActivity extends AppCompatActivity {
         mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
         startActivity(mainActivityIntent);
         finish();
+    }
+
+    private void SendUserToForgotPasswordActivity() {
+        startActivity(new Intent(getApplicationContext(), ForgotPasswordActivity.class));
     }
 
     private void SendUserToLoginActivity() {
