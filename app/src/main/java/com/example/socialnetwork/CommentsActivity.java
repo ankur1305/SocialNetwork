@@ -29,6 +29,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
@@ -50,6 +51,7 @@ public class CommentsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
 
     private String post_key, current_user_id;
+    private long countComments = 0;
 
 
     @Override
@@ -181,7 +183,6 @@ public class CommentsActivity extends AppCompatActivity {
     }
 
     private void ValidateComment(String userName, String profileImage) {
-
         String commentText = CommentInputText.getText().toString();
         if(TextUtils.isEmpty(commentText)){
             Toast.makeText(this, "Please Write Some Text..", Toast.LENGTH_SHORT).show();
@@ -204,13 +205,12 @@ public class CommentsActivity extends AppCompatActivity {
             commentsMap.put("username", userName);
             commentsMap.put("profileimage", profileImage);
 
-
             PostsRef.child(RandomKey).updateChildren(commentsMap)
                     .addOnCompleteListener(new OnCompleteListener() {
                         @Override
                         public void onComplete(@NonNull Task task) {
                             if(task.isSuccessful()){
-                                Toast.makeText(CommentsActivity.this, "Post Added Successfully", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(CommentsActivity.this, "Comment Added Successfully", Toast.LENGTH_SHORT).show();
                             }else{
                                 Toast.makeText(CommentsActivity.this, "Error Occured, try Again", Toast.LENGTH_SHORT).show();
                             }

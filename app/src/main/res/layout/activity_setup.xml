@@ -33,7 +33,7 @@
                 android:drawableLeft="@drawable/username"
                 android:drawablePadding="10dp"
                 android:ems="10"
-                android:hint="   Enter Username..."
+                android:hint="Enter Username..."
                 android:padding="16dp" />
 
             <EditText
@@ -48,7 +48,7 @@
                 android:drawableLeft="@drawable/name"
                 android:drawablePadding="10dp"
                 android:ems="10"
-                android:hint="   Enter full Name..."
+                android:hint="Enter full Name..."
                 android:padding="16dp" />
 
             <EditText
@@ -63,7 +63,7 @@
                 android:drawableLeft="@drawable/country"
                 android:drawablePadding="10dp"
                 android:ems="10"
-                android:hint="   Enter Contact (Optional)"
+                android:hint="Enter Contact (Optional)"
                 android:inputType="number"
                 android:padding="16dp" />
 
