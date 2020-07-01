@@ -118,13 +118,13 @@ public class PersonProfileActivity extends AppCompatActivity {
                     String request_type = snapshot.child(receiverUserID).child("request_type").getValue().toString();
                     if(request_type.equals("sent")){
                         CURRENT_STATE = "request_sent";
-                        SendFriendRequestButton.setText("Cancel Friend Request");
+                        SendFriendRequestButton.setText("Delete");
                         SendFriendRequestButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                         DeclineFriendRequestButton.setVisibility(View.GONE);
                         DeclineFriendRequestButton.setEnabled(false);
                     }else if(request_type.equals("received")){
                         CURRENT_STATE = "request_received";
-                        SendFriendRequestButton.setText("Accept Friend Request");
+                        SendFriendRequestButton.setText("Confirm");
                         SendFriendRequestButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                         DeclineFriendRequestButton.setVisibility(View.VISIBLE);
                         DeclineFriendRequestButton.setEnabled(true);
@@ -179,7 +179,7 @@ public class PersonProfileActivity extends AppCompatActivity {
                                             if(task.isSuccessful()){
                                                 SendFriendRequestButton.setEnabled(true);
                                                 CURRENT_STATE = "request_sent";
-                                                SendFriendRequestButton.setText("Cancel Friend Request");
+                                                SendFriendRequestButton.setText("Cancel");
                                                 SendFriendRequestButton.setBackgroundColor(getResources().getColor(R.color.colorPrimary));
                                                 DeclineFriendRequestButton.setVisibility(View.GONE);
                                                 DeclineFriendRequestButton.setEnabled(false);
@@ -206,7 +206,7 @@ public class PersonProfileActivity extends AppCompatActivity {
                                             if(task.isSuccessful()){
                                                 SendFriendRequestButton.setEnabled(true);
                                                 CURRENT_STATE = "not_friends";
-                                                SendFriendRequestButton.setText("Send Friend Request");
+                                                SendFriendRequestButton.setText("Add Friend");
                                                 SendFriendRequestButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                                                 DeclineFriendRequestButton.setVisibility(View.GONE);
                                                 DeclineFriendRequestButton.setEnabled(false);
@@ -282,7 +282,7 @@ public class PersonProfileActivity extends AppCompatActivity {
                                             if(task.isSuccessful()){
                                                 SendFriendRequestButton.setEnabled(true);
                                                 CURRENT_STATE = "not_friends";
-                                                SendFriendRequestButton.setText("Send Friend Request");
+                                                SendFriendRequestButton.setText("Add Friend");
                                                 SendFriendRequestButton.setBackgroundColor(getResources().getColor(R.color.colorPrimaryDark));
                                                 DeclineFriendRequestButton.setVisibility(View.GONE);
                                                 DeclineFriendRequestButton.setEnabled(false);

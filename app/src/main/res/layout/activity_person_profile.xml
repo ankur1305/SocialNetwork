@@ -98,28 +98,43 @@
                 android:textAllCaps="false"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp"/>
-            <Button
-                android:id="@+id/person_send_friend_request_btn"
-                android:layout_width="230dp"
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@color/colorPrimaryDark"
-                android:layout_marginTop="45dp"
-                android:text="Send Friend Request"
-                android:textColor="@android:color/background_light"
+                android:layout_below="@id/person_relationship_status"
+                android:layout_alignParentBottom="false"
                 android:layout_centerHorizontal="true"
-                android:textSize="16sp"
-                android:layout_below="@id/person_relationship_status"/>
-            <Button
-                android:id="@+id/person_decline_friend_request_btn"
-                android:layout_width="230dp"
-                android:layout_height="wrap_content"
-                android:background="@color/colorPrimary"
-                android:layout_marginTop="8dp"
-                android:text="Decline Friend Request"
-                android:textColor="@android:color/background_light"
-                android:layout_centerHorizontal="true"
-                android:textSize="16sp"
-                android:layout_below="@id/person_send_friend_request_btn"/>
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="10dp"
+                android:orientation="horizontal"
+                android:padding="10dp">
+
+                <Button
+                    android:id="@+id/person_send_friend_request_btn"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:background="@color/colorPrimaryDark"
+                    android:text="Add Friend"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="16sp" />
+
+                <Button
+                    android:id="@+id/person_decline_friend_request_btn"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_margin="8dp"
+                    android:background="@color/colorPrimary"
+                    android:text="Cancel"
+                    android:textColor="@android:color/background_light"
+                    android:textSize="16sp"
+                    android:visibility="visible" />
+
+            </LinearLayout>
+
 
         </RelativeLayout>
 
