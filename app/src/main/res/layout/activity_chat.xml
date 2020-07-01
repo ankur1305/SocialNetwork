@@ -58,6 +58,7 @@
             android:id="@+id/send_message_button"
             android:layout_width="50dp"
             android:layout_height="60dp"
+            android:elevation="5dp"
             android:background="@android:color/transparent"
             android:baselineAlignBottom="false"
             android:focusable="auto"
