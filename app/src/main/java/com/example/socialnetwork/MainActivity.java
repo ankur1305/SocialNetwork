@@ -38,6 +38,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
@@ -380,6 +381,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static void PicassoStuff(Context context, String loadImage, ImageView intoImage){
         Picasso.Builder builder = new Picasso.Builder(context).indicatorsEnabled(true);
+        builder.downloader(new OkHttp3Downloader(context,Integer.MAX_VALUE));
         builder.listener(new Picasso.Listener()
         {
             @Override
@@ -414,12 +416,12 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Home", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_friends:
+                startActivity(new Intent(MainActivity.this, FriendsActivity.class));
                 break;
             case R.id.nav_find_friends:
                 startActivity(new Intent(MainActivity.this, FindFriendsActivity.class));
                 break;
             case R.id.nav_messages:
-                Toast.makeText(this, "Messages", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.nav_settings:
                 SendUserToSettinsActivity();

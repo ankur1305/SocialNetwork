@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".FriendsActivity"></activity>
+        <activity android:name=".ChatActivity" android:parentActivityName=".FriendsActivity"></activity>
+        <activity android:name=".FriendsActivity" />
         <activity android:name=".PersonProfileActivity" />
         <activity
             android:name=".ForgotPasswordActivity"

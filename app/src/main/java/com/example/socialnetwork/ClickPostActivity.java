@@ -149,8 +149,6 @@ public class ClickPostActivity extends AppCompatActivity {
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
         alertDialogBuilder.create();
-
-
     }
 
     private void SendUserToMainActivity() {

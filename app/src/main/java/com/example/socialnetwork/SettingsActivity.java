@@ -7,6 +7,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -33,10 +36,13 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 import com.theartofdev.edmodo.cropper.CropImage;
 import com.theartofdev.edmodo.cropper.CropImageView;
 
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -153,8 +159,22 @@ public class SettingsActivity extends AppCompatActivity {
                 loadingBar.setCanceledOnTouchOutside(true);
                 loadingBar.show();
 
+//                Uri resultUri = result.getUri();
+
                 Uri resultUri = result.getUri();
-                userProfImage.setImageURI(resultUri);
+                InputStream imageStream = null;
+                try {
+                    imageStream = getContentResolver().openInputStream(resultUri);
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                Bitmap selectedImage = BitmapFactory.decodeStream(imageStream);
+
+                selectedImage = getResizedBitmap(selectedImage, 400,300);// 400 and 300 height and width, replace with desired size
+
+                userProfImage.setImageBitmap(selectedImage);
+
+//                userProfImage.setImageURI(resultUri);
                 final StorageReference filePath = UserProfileImageRef.child(currentUserID + ".jpg");
                 final UploadTask uploadTask = filePath.putFile(resultUri);
 
@@ -248,9 +268,26 @@ public class SettingsActivity extends AppCompatActivity {
         startActivity(mainActivityIntent);
         finish();
     }
+    public Bitmap getResizedBitmap(Bitmap bm, int newHeight, int newWidth) {
+        int width = bm.getWidth();
+        int height = bm.getHeight();
+        float scaleWidth = ((float) newWidth) / width;
+        float scaleHeight = ((float) newHeight) / height;
 
+        // create a matrix for the manipulation
+        Matrix matrix = new Matrix();
+
+        // resize the bit map
+        matrix.postScale(scaleWidth, scaleHeight);
+
+        // recreate the new Bitmap
+        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
+        return resizedBitmap;
+    }
     private static void PicassoStuff(Context context, String loadImage, ImageView intoImage){
         Picasso.Builder builder = new Picasso.Builder(context).indicatorsEnabled(true);
+        builder.downloader(new OkHttp3Downloader(context,Integer.MAX_VALUE));
         builder.listener(new Picasso.Listener()
         {
             @Override
