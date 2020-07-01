@@ -1,8 +1,10 @@
 package com.example.socialnetwork;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
@@ -22,6 +24,7 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -31,8 +34,10 @@ import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -47,10 +52,14 @@ public class ChatActivity extends AppCompatActivity {
     private TextView receiverName;
     private CircleImageView receiverProfileImage;
 
-    private String messageReceiverID, messageReceiverName, messageSenderID, saveCurrentDate, saveCurrentTime;
+    private final List<Messages> messagesList = new ArrayList<>();
+    private MessagesAdapter messagesAdapter;
+
+    private String messageReceiverID;
+    private String messageReceiverName;
+    private String messageSenderID;
 
     private DatabaseReference rootRef;
-    private FirebaseAuth mAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,8 +87,41 @@ public class ChatActivity extends AppCompatActivity {
                 SendMessage();
             }
         });
+        FetchMessages();
     }
 
+    private void FetchMessages() {
+        rootRef.child("Messages").child(messageSenderID).child(messageReceiverID).addChildEventListener(new ChildEventListener() {
+            @Override
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+                if(snapshot.exists()){
+                    Messages messages = snapshot.getValue(Messages.class);
+                    messagesList.add(messages);
+                    messagesAdapter.notifyDataSetChanged();
+                }
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
     private void DisplayReceiverInfo() {
         receiverName.setText(messageReceiverName);
         rootRef.child("Users").child(messageReceiverID).addValueEventListener(new ValueEventListener() {
@@ -111,11 +153,11 @@ public class ChatActivity extends AppCompatActivity {
 
             Calendar calForDate = Calendar.getInstance();
             SimpleDateFormat currentDate = new SimpleDateFormat("E, dd MMM", Locale.US);
-            saveCurrentDate = currentDate.format(calForDate.getTime());
+            String saveCurrentDate = currentDate.format(calForDate.getTime());
 
             Calendar calForTime = Calendar.getInstance();
             SimpleDateFormat currentTime = new SimpleDateFormat("h:mm a", Locale.US);
-            saveCurrentTime = currentTime.format(calForDate.getTime());
+            String saveCurrentTime = currentTime.format(calForDate.getTime());
 
             Map<String, Object> messageTextBody = new HashMap();
             messageTextBody.put("message", messageText);
@@ -133,10 +175,11 @@ public class ChatActivity extends AppCompatActivity {
                 public void onComplete(@NonNull Task<Void> task) {
                     if(task.isSuccessful()){
                         Toast.makeText(ChatActivity.this, "Message Sent", Toast.LENGTH_SHORT).show();
+                        userMessageInput.setText("");
                     }else{
                         Toast.makeText(ChatActivity.this, "Error Occured!", Toast.LENGTH_SHORT).show();
+                        userMessageInput.setText("");
                     }
-                    userMessageInput.setText("");
                 }
             });
         }
@@ -172,7 +215,13 @@ public class ChatActivity extends AppCompatActivity {
         receiverName = findViewById(R.id.custom_profile_name);
         receiverProfileImage = findViewById(R.id.custom_profile_image);
 
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         messageSenderID = mAuth.getCurrentUser().getUid();
+
+        messagesAdapter = new MessagesAdapter(messagesList);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        userMessagesList.setHasFixedSize(true);
+        userMessagesList.setLayoutManager(linearLayoutManager);
+        userMessagesList.setAdapter(messagesAdapter);
     }
 }
