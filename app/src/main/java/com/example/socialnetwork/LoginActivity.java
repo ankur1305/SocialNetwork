@@ -44,7 +44,7 @@ public class LoginActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 1;
-    private static  final String TAG = "LoginActivity";
+    private static final String TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,8 +124,7 @@ public class LoginActivity extends AppCompatActivity {
             GoogleSignInAccount acc = task.getResult(ApiException.class);
             Toast.makeText(this, "Signed In Successfully", Toast.LENGTH_SHORT).show();
             FirebaseGoogleAuth(acc);
-        }
-        catch(ApiException e){
+        } catch (ApiException e) {
             Toast.makeText(this, "Error Occured, Try Again", Toast.LENGTH_SHORT).show();
             FirebaseGoogleAuth(null);
             loadingBar.dismiss();
@@ -137,12 +136,11 @@ public class LoginActivity extends AppCompatActivity {
         mAuth.signInWithCredential(authCredential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
-                if(task.isSuccessful()){
+                if (task.isSuccessful()) {
                     Toast.makeText(LoginActivity.this, "Successful", Toast.LENGTH_SHORT).show();
                     SendUserToMainActivity();
                     loadingBar.dismiss();
-                }
-                else{
+                } else {
                     Toast.makeText(LoginActivity.this, "Failed", Toast.LENGTH_SHORT).show();
                     SendUserToLoginActivity();
                     loadingBar.dismiss();
@@ -156,7 +154,7 @@ public class LoginActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser != null){
+        if (currentUser != null) {
             SendUserToMainActivity();
         }
     }
@@ -164,9 +162,9 @@ public class LoginActivity extends AppCompatActivity {
     private void AllowingUserToLogin() {
         String email = UserEmail.getText().toString();
         String password = UserPassword.getText().toString();
-        if(TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
+        if (TextUtils.isEmpty(email) || TextUtils.isEmpty(password)) {
             Toast.makeText(LoginActivity.this, "Please Fill Your Informations..", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             loadingBar.setTitle("Login");
             loadingBar.setMessage("Please Wait, While We Logging You In...");
             loadingBar.setCanceledOnTouchOutside(true);
@@ -175,11 +173,11 @@ public class LoginActivity extends AppCompatActivity {
                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            if(task.isSuccessful()){
+                            if (task.isSuccessful()) {
                                 Toast.makeText(LoginActivity.this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();
                                 SendUserToMainActivity();
-                            }else{
+                            } else {
                                 String message = task.getException().toString();
                                 Toast.makeText(LoginActivity.this, "Something Error Occured" + message, Toast.LENGTH_SHORT).show();
                                 loadingBar.dismiss();

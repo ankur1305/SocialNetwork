@@ -51,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
     private RecyclerView postList;
     private Toolbar mToolbar;
     private ActionBarDrawerToggle actionBarDrawerToggle;
-    private CircleImageView      NavProfileImage;
+    private CircleImageView NavProfileImage;
     private TextView NavProfileUserName;
     private ImageButton AddNewPostButton;
 
@@ -78,17 +78,13 @@ public class MainActivity extends AppCompatActivity {
         CommentsRef = FirebaseDatabase.getInstance().getReference().child("Comments");
 
 
-            builder = new Picasso.Builder(this);
-            builder.listener(new Picasso.Listener()
-            {
-                @Override
-                public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-                {
-                    exception.printStackTrace();
-                }
-            });
-
-
+        builder = new Picasso.Builder(this);
+        builder.listener(new Picasso.Listener() {
+            @Override
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
+                exception.printStackTrace();
+            }
+        });
 
 
         mToolbar = (Toolbar) findViewById(R.id.main_page_toolbar);
@@ -118,17 +114,16 @@ public class MainActivity extends AppCompatActivity {
         UsersRef.child(currentUserID).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(dataSnapshot.exists()){
-                    if(dataSnapshot.hasChild("fullname")){
+                if (dataSnapshot.exists()) {
+                    if (dataSnapshot.hasChild("fullname")) {
                         String fullName = dataSnapshot.child("fullname").getValue().toString();
                         NavProfileUserName.setText(fullName);
                     }
-                    if(dataSnapshot.hasChild("profileimage")){
+                    if (dataSnapshot.hasChild("profileimage")) {
 
                         String image = dataSnapshot.child("profileimage").getValue().toString();
                         builder.build().load(image).into(NavProfileImage);
-                    }
-                    else{
+                    } else {
                         Toast.makeText(MainActivity.this, "Profile Name Do Not Exists", Toast.LENGTH_SHORT).show();
                     }
                 }
@@ -160,15 +155,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void DisplayAllUsersPosts() {
 
         Query SortPostsInDescendingOrder = PostsRef.orderByChild("counter");
 
         FirebaseRecyclerOptions<Posts> options =
                 new FirebaseRecyclerOptions.Builder<Posts>()
-                .setQuery(SortPostsInDescendingOrder, Posts.class)
-                .build();
+                        .setQuery(SortPostsInDescendingOrder, Posts.class)
+                        .build();
 
         FirebaseRecyclerAdapter<Posts, PostsViewHolder> firebaseRecyclerAdapter = new FirebaseRecyclerAdapter<Posts, PostsViewHolder>(options) {
             @Override
@@ -202,12 +196,12 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                if(likeChecker.equals(true)){
-                                    if(snapshot.child(PostKey).hasChild(currentUserID)){
+                                if (likeChecker.equals(true)) {
+                                    if (snapshot.child(PostKey).hasChild(currentUserID)) {
                                         LikesRef.child(PostKey).child(currentUserID).removeValue();
                                         likeChecker = false;
 
-                                    }else{
+                                    } else {
                                         LikesRef.child(PostKey).child(currentUserID).setValue(true);
                                         likeChecker = false;
                                     }
@@ -244,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public static class PostsViewHolder extends RecyclerView.ViewHolder{
+    public static class PostsViewHolder extends RecyclerView.ViewHolder {
 
         View mView;
 
@@ -271,11 +265,11 @@ public class MainActivity extends AppCompatActivity {
             LikesRef.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
-                    if(snapshot.child(postKey).hasChild(currentUserId)){
+                    if (snapshot.child(postKey).hasChild(currentUserId)) {
                         countLikes = (int) snapshot.child(postKey).getChildrenCount();
                         LikePostButton.setImageResource(R.drawable.like);
                         DisplayNoOfLikes.setText((Integer.toString(countLikes)) + " Likes");
-                    }else{
+                    } else {
                         countLikes = (int) snapshot.child(postKey).getChildrenCount();
                         LikePostButton.setImageResource(R.drawable.dislike);
                         DisplayNoOfLikes.setText((Integer.toString(countLikes)) + " Likes");
@@ -290,31 +284,34 @@ public class MainActivity extends AppCompatActivity {
         }
 
 
-
-        public void setFullName(String fullname){
+        public void setFullName(String fullname) {
             TextView username = (TextView) mView.findViewById(R.id.post_user_name);
             username.setText(fullname);
         }
-        public void setProfileimage(Context ctx, String profileimage){
+
+        public void setProfileimage(Context ctx, String profileimage) {
             CircleImageView image = (CircleImageView) mView.findViewById(R.id.post_profile_image);
-            PicassoStuff(ctx,profileimage,image);
+            PicassoStuff(ctx, profileimage, image);
         }
 
-        public void setTime(String time){
+        public void setTime(String time) {
             TextView PostTime = (TextView) mView.findViewById(R.id.post_time);
             PostTime.setText("  " + time);
         }
-        public void setDate(String date){
+
+        public void setDate(String date) {
             TextView PostDate = (TextView) mView.findViewById(R.id.post_date);
             PostDate.setText("  " + date);
         }
-        public void setDescription(String description){
+
+        public void setDescription(String description) {
             TextView PostDescription = (TextView) mView.findViewById(R.id.click_post_description);
             PostDescription.setText(description);
         }
-        public void setPostimage(Context ctx, String postimage){
+
+        public void setPostimage(Context ctx, String postimage) {
             ImageView PostImage = (ImageView) mView.findViewById(R.id.click_post_image);
-            PicassoStuff(ctx,postimage,PostImage);
+            PicassoStuff(ctx, postimage, PostImage);
         }
 
 
@@ -325,9 +322,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         FirebaseUser currentUser = mAuth.getCurrentUser();
-        if(currentUser == null){
+        if (currentUser == null) {
             SendUserToLoginActivity();
-        }else{
+        } else {
             CheckUserExistence();
         }
     }
@@ -338,7 +335,7 @@ public class MainActivity extends AppCompatActivity {
         UsersRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if(!dataSnapshot.hasChild(current_user_id)){
+                if (!dataSnapshot.hasChild(current_user_id)) {
                     SendUserToSetupActivity();
                 }
             }
@@ -379,14 +376,12 @@ public class MainActivity extends AppCompatActivity {
         startActivity(clickPostActivityIntent);
     }
 
-    private static void PicassoStuff(Context context, String loadImage, ImageView intoImage){
+    private static void PicassoStuff(Context context, String loadImage, ImageView intoImage) {
         Picasso.Builder builder = new Picasso.Builder(context).indicatorsEnabled(true);
-        builder.downloader(new OkHttp3Downloader(context,Integer.MAX_VALUE));
-        builder.listener(new Picasso.Listener()
-        {
+        builder.downloader(new OkHttp3Downloader(context, Integer.MAX_VALUE));
+        builder.listener(new Picasso.Listener() {
             @Override
-            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception)
-            {
+            public void onImageLoadFailed(Picasso picasso, Uri uri, Exception exception) {
                 String message = exception.getMessage();
                 Log.i("Error", message);
             }
@@ -396,7 +391,7 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if(actionBarDrawerToggle.onOptionsItemSelected(item)){
+        if (actionBarDrawerToggle.onOptionsItemSelected(item)) {
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -404,8 +399,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void UserMenuSelector(MenuItem item) {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.nav_post:
                 SendUserToPostActivity();
                 break;
