@@ -45,6 +45,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -161,11 +162,11 @@ public class MainActivity extends AppCompatActivity {
         String saveCurrentDate, saveCurrentTime;
 
         Calendar calForDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("E, dd MMM");
+        SimpleDateFormat currentDate = new SimpleDateFormat("E", Locale.US);
         saveCurrentDate = currentDate.format(calForDate.getTime());
 
         Calendar calForTime = Calendar.getInstance();
-        SimpleDateFormat currentTime = new SimpleDateFormat("h:mm a");
+        SimpleDateFormat currentTime = new SimpleDateFormat("h:mm a", Locale.US);
         saveCurrentTime = currentTime.format(calForDate.getTime());
 
         Map<String, Object> currentStatusMap = new HashMap<>();
@@ -258,7 +259,7 @@ public class MainActivity extends AppCompatActivity {
         firebaseRecyclerAdapter.startListening();
         postList.setAdapter(firebaseRecyclerAdapter);
 
-        UpdateUserStatus("online");
+        UpdateUserStatus("Online");
     }
 
 
@@ -354,12 +355,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        UpdateUserStatus("Online");
-    }
-
-    @Override
     protected void onStop() {
         super.onStop();
         UpdateUserStatus("Offline");
@@ -369,6 +364,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
         UpdateUserStatus("Offline");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UpdateUserStatus("Online");
     }
 
     private void CheckUserExistence() {

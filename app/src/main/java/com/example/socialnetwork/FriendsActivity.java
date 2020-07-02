@@ -32,6 +32,7 @@ import com.squareup.picasso.Picasso;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -61,24 +62,7 @@ public class FriendsActivity extends AppCompatActivity {
         FriendsRef = FirebaseDatabase.getInstance().getReference().child("Friends").child(online_user_id);
 
         DisplayAllFriends();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         UpdateUserStatus("Online");
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        UpdateUserStatus("Offline");
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        UpdateUserStatus("Offline");
     }
 
     private void DisplayAllFriends() {
@@ -100,6 +84,17 @@ public class FriendsActivity extends AppCompatActivity {
                         if(snapshot.exists()){
                             final String userName = snapshot.child("fullname").getValue().toString();
                             final String profileImage = snapshot.child("profileimage").getValue().toString();
+                            final String type;
+
+                            if(snapshot.hasChild("userState")){
+                                type = snapshot.child("userState").child("type").getValue().toString();
+                                if(type.equals("Online")){
+                                    holder.onlineStatusView.setVisibility(View.VISIBLE);
+                                }else{
+                                    holder.onlineStatusView.setVisibility(View.INVISIBLE);
+                                }
+
+                            }
 
                             holder.setFullName(userName);
                             holder.setProfileimage(getApplication(), profileImage);
@@ -161,9 +156,11 @@ public class FriendsActivity extends AppCompatActivity {
 
     public static class FriendsViewHolder extends RecyclerView.ViewHolder{
         View mView;
+        ImageView onlineStatusView;
         public FriendsViewHolder(@NonNull View itemView) {
             super(itemView);
             mView = itemView;
+            onlineStatusView = mView.findViewById(R.id.all_user_online_icon);
         }
 
         public void setFullName(String fullname){
@@ -199,11 +196,11 @@ public class FriendsActivity extends AppCompatActivity {
         String saveCurrentDate, saveCurrentTime;
 
         Calendar calForDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("E, dd MMM");
+        SimpleDateFormat currentDate = new SimpleDateFormat("E", Locale.US);
         saveCurrentDate = currentDate.format(calForDate.getTime());
 
         Calendar calForTime = Calendar.getInstance();
-        SimpleDateFormat currentTime = new SimpleDateFormat("h:mm a");
+        SimpleDateFormat currentTime = new SimpleDateFormat("h:mm a", Locale.US);
         saveCurrentTime = currentTime.format(calForDate.getTime());
 
         Map<String, Object> currentStatusMap = new HashMap<>();

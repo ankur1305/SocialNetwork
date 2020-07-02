@@ -90,6 +90,7 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
         FetchMessages();
+        UpdateUserStatus("Online");
     }
 
     private void FetchMessages() {
@@ -135,11 +136,11 @@ public class ChatActivity extends AppCompatActivity {
                     final String lastDate = snapshot.child("userState").child("date").getValue().toString();
                     final String lastTime = snapshot.child("userState").child("time").getValue().toString();
 
-                    if(type.equals("online")){
+                    if(type.equals("Online")){
                         userLastSeen.setText("Online");
                     }
                     else{
-                        userLastSeen.setText("Last Seen On : " + lastDate + lastTime);
+                        userLastSeen.setText("Last Seen On " + lastTime +" "+lastDate );
                     }
                     PicassoStuff(getApplicationContext(), profileImage, receiverProfileImage);
                 }
@@ -152,8 +153,6 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
     private void SendMessage() {
-        UpdateUserStatus("Online");
-
         String messageText = userMessageInput.getText().toString();
         if(TextUtils.isEmpty(messageText)){
             Toast.makeText(this, "Please Type Something..", Toast.LENGTH_SHORT).show();
@@ -202,11 +201,11 @@ public class ChatActivity extends AppCompatActivity {
         String saveCurrentDate, saveCurrentTime;
 
         Calendar calForDate = Calendar.getInstance();
-        SimpleDateFormat currentDate = new SimpleDateFormat("E, dd MMM");
+        SimpleDateFormat currentDate = new SimpleDateFormat("E", Locale.US);
         saveCurrentDate = currentDate.format(calForDate.getTime());
 
         Calendar calForTime = Calendar.getInstance();
-        SimpleDateFormat currentTime = new SimpleDateFormat("h:mm a");
+        SimpleDateFormat currentTime = new SimpleDateFormat("h:mm a", Locale.US);
         saveCurrentTime = currentTime.format(calForDate.getTime());
 
         Map<String, Object> currentStatusMap = new HashMap<>();
