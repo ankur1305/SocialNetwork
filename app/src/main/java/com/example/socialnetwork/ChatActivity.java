@@ -49,7 +49,7 @@ public class ChatActivity extends AppCompatActivity {
     private ImageButton SendImageFileButton, SendMessageButton;
     private EditText userMessageInput;
     private RecyclerView userMessagesList;
-    private TextView receiverName;
+    private TextView receiverName, userLastSeen;
     private CircleImageView receiverProfileImage;
 
     private final List<Messages> messagesList = new ArrayList<>();
@@ -59,7 +59,7 @@ public class ChatActivity extends AppCompatActivity {
     private String messageReceiverName;
     private String messageSenderID;
 
-    private DatabaseReference rootRef;
+    private DatabaseReference rootRef, UsersRef;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +70,8 @@ public class ChatActivity extends AppCompatActivity {
         messageReceiverName = getIntent().getExtras().get("userName").toString();
 
         rootRef = FirebaseDatabase.getInstance().getReference();
+        UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
+
 
         InitializeFields();
         DisplayReceiverInfo();
@@ -129,6 +131,16 @@ public class ChatActivity extends AppCompatActivity {
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if(snapshot.exists()){
                     final String profileImage = snapshot.child("profileimage").getValue().toString();
+                    final String type = snapshot.child("userState").child("type").getValue().toString();
+                    final String lastDate = snapshot.child("userState").child("date").getValue().toString();
+                    final String lastTime = snapshot.child("userState").child("time").getValue().toString();
+
+                    if(type.equals("online")){
+                        userLastSeen.setText("Online");
+                    }
+                    else{
+                        userLastSeen.setText("Last Seen On : " + lastDate + lastTime);
+                    }
                     PicassoStuff(getApplicationContext(), profileImage, receiverProfileImage);
                 }
             }
@@ -140,6 +152,8 @@ public class ChatActivity extends AppCompatActivity {
         });
     }
     private void SendMessage() {
+        UpdateUserStatus("Online");
+
         String messageText = userMessageInput.getText().toString();
         if(TextUtils.isEmpty(messageText)){
             Toast.makeText(this, "Please Type Something..", Toast.LENGTH_SHORT).show();
@@ -184,6 +198,24 @@ public class ChatActivity extends AppCompatActivity {
             });
         }
     }
+    public void UpdateUserStatus(String state){
+        String saveCurrentDate, saveCurrentTime;
+
+        Calendar calForDate = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("E, dd MMM");
+        saveCurrentDate = currentDate.format(calForDate.getTime());
+
+        Calendar calForTime = Calendar.getInstance();
+        SimpleDateFormat currentTime = new SimpleDateFormat("h:mm a");
+        saveCurrentTime = currentTime.format(calForDate.getTime());
+
+        Map<String, Object> currentStatusMap = new HashMap<>();
+        currentStatusMap.put("time", saveCurrentTime);
+        currentStatusMap.put("date", saveCurrentDate);
+        currentStatusMap.put("type", state);
+
+        UsersRef.child(messageSenderID).child("userState").updateChildren(currentStatusMap);
+    }
     private static void PicassoStuff(Context context, String loadImage, ImageView intoImage) {
         Picasso.Builder builder = new Picasso.Builder(context).indicatorsEnabled(true);
         builder.downloader(new OkHttp3Downloader(context,Integer.MAX_VALUE));
@@ -213,6 +245,7 @@ public class ChatActivity extends AppCompatActivity {
         userMessageInput = findViewById(R.id.input_message);
         userMessagesList = findViewById(R.id.messages_list_users);
         receiverName = findViewById(R.id.custom_profile_name);
+        userLastSeen = findViewById(R.id.custom_user_last_seen);
         receiverProfileImage = findViewById(R.id.custom_profile_image);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
