@@ -11,4 +11,10 @@
         layout="@layout/app_bar_layout">
     </include>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/my_all_posts_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/my_posts_app_bar"/>
+
 </RelativeLayout>

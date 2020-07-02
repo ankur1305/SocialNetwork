@@ -56,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton AddNewPostButton;
 
     private FirebaseAuth mAuth;
-    private DatabaseReference UsersRef, PostsRef, LikesRef, CommentsRef;
+    private DatabaseReference UsersRef, PostsRef, LikesRef;
     private StorageReference ImagesRef;
     private GoogleSignInClient mGoogleSignInClient;
 
@@ -75,8 +75,6 @@ public class MainActivity extends AppCompatActivity {
         UsersRef = FirebaseDatabase.getInstance().getReference().child("Users");
         PostsRef = FirebaseDatabase.getInstance().getReference().child("Posts");
         LikesRef = FirebaseDatabase.getInstance().getReference().child("Likes");
-        CommentsRef = FirebaseDatabase.getInstance().getReference().child("Comments");
-
 
         builder = new Picasso.Builder(this);
         builder.listener(new Picasso.Listener() {
