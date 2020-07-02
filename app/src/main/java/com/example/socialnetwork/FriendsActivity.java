@@ -29,6 +29,11 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class FriendsActivity extends AppCompatActivity {
@@ -56,6 +61,24 @@ public class FriendsActivity extends AppCompatActivity {
         FriendsRef = FirebaseDatabase.getInstance().getReference().child("Friends").child(online_user_id);
 
         DisplayAllFriends();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        UpdateUserStatus("Online");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        UpdateUserStatus("Offline");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UpdateUserStatus("Offline");
     }
 
     private void DisplayAllFriends() {
@@ -170,5 +193,24 @@ public class FriendsActivity extends AppCompatActivity {
             }
         });
         builder.build().load(loadImage).fit().into(intoImage);
+    }
+
+    public void UpdateUserStatus(String state){
+        String saveCurrentDate, saveCurrentTime;
+
+        Calendar calForDate = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("E, dd MMM");
+        saveCurrentDate = currentDate.format(calForDate.getTime());
+
+        Calendar calForTime = Calendar.getInstance();
+        SimpleDateFormat currentTime = new SimpleDateFormat("h:mm a");
+        saveCurrentTime = currentTime.format(calForDate.getTime());
+
+        Map<String, Object> currentStatusMap = new HashMap<>();
+        currentStatusMap.put("time", saveCurrentTime);
+        currentStatusMap.put("date", saveCurrentDate);
+        currentStatusMap.put("type", state);
+
+        UsersRef.child(online_user_id).child("userState").updateChildren(currentStatusMap);
     }
 }

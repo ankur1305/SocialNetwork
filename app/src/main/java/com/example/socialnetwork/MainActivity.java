@@ -42,6 +42,11 @@ import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Map;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class MainActivity extends AppCompatActivity {
@@ -152,6 +157,25 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void UpdateUserStatus(String state) {
+        String saveCurrentDate, saveCurrentTime;
+
+        Calendar calForDate = Calendar.getInstance();
+        SimpleDateFormat currentDate = new SimpleDateFormat("E, dd MMM");
+        saveCurrentDate = currentDate.format(calForDate.getTime());
+
+        Calendar calForTime = Calendar.getInstance();
+        SimpleDateFormat currentTime = new SimpleDateFormat("h:mm a");
+        saveCurrentTime = currentTime.format(calForDate.getTime());
+
+        Map<String, Object> currentStatusMap = new HashMap<>();
+        currentStatusMap.put("time", saveCurrentTime);
+        currentStatusMap.put("date", saveCurrentDate);
+        currentStatusMap.put("type", state);
+
+        UsersRef.child(currentUserID).child("userState").updateChildren(currentStatusMap);
+    }
+
 
     private void DisplayAllUsersPosts() {
 
@@ -233,6 +257,8 @@ public class MainActivity extends AppCompatActivity {
         };
         firebaseRecyclerAdapter.startListening();
         postList.setAdapter(firebaseRecyclerAdapter);
+
+        UpdateUserStatus("online");
     }
 
 
@@ -325,6 +351,24 @@ public class MainActivity extends AppCompatActivity {
         } else {
             CheckUserExistence();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        UpdateUserStatus("Online");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        UpdateUserStatus("Offline");
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        UpdateUserStatus("Offline");
     }
 
     private void CheckUserExistence() {
@@ -421,6 +465,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.nav_logout:
                 FirebaseAuth.getInstance().signOut();
                 SendUserToLoginActivity();
+                UpdateUserStatus("offline");
                 break;
         }
     }

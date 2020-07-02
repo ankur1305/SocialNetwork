@@ -45,6 +45,7 @@ public class LoginActivity extends AppCompatActivity {
     private GoogleSignInClient mGoogleSignInClient;
     private static final int RC_SIGN_IN = 1;
     private static final String TAG = "LoginActivity";
+    private Boolean emailChecker = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,9 +175,9 @@ public class LoginActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                Toast.makeText(LoginActivity.this, "Logged In Successfully", Toast.LENGTH_SHORT).show();
+                                VerifyEmailAddress();
                                 loadingBar.dismiss();
-                                SendUserToMainActivity();
+
                             } else {
                                 String message = task.getException().toString();
                                 Toast.makeText(LoginActivity.this, "Something Error Occured" + message, Toast.LENGTH_SHORT).show();
@@ -184,6 +185,18 @@ public class LoginActivity extends AppCompatActivity {
                             }
                         }
                     });
+        }
+    }
+
+    private void VerifyEmailAddress(){
+        FirebaseUser user = mAuth.getCurrentUser();
+        emailChecker = user.isEmailVerified();
+
+        if(emailChecker){
+            SendUserToMainActivity();
+        }else{
+            Toast.makeText(this, "Please Verify Your Account First..", Toast.LENGTH_LONG).show();
+            mAuth.signOut();
         }
     }
 

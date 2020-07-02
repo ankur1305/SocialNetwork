@@ -103,6 +103,7 @@ public class CommentsActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+
         FirebaseRecyclerOptions<Comments> options =
                 new FirebaseRecyclerOptions.Builder<Comments>()
                         .setQuery(PostsRef, Comments.class)
